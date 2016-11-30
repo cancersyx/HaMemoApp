@@ -188,6 +188,7 @@ public class TaskListProvider extends ContentProvider {
 
     /**
      * 删除数据
+     *
      * @param uri
      * @param selection
      * @param selectionArgs
@@ -198,21 +199,68 @@ public class TaskListProvider extends ContentProvider {
         //获得数据库实例
         SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         int count;
-        switch (sUriMatcher.match(uri)){
+        switch (sUriMatcher.match(uri)) {
             //根据指定条件删除
             case TASKS:
-                count = db.delete(TASK_LIST_TABLE_NAME,selection,selectionArgs);
+                count = db.delete(TASK_LIST_TABLE_NAME, selection, selectionArgs);
                 break;
             case TASK_ID:
                 String noteId = uri.getPathSegments().get(1);
-                count = db.delete(TASK_LIST_TABLE_NAME, TaskList.Tasks._ID)
+                count = db.delete(TASK_LIST_TABLE_NAME, TaskList.Tasks._ID + "=" + noteId
+                        + (!TextUtils.isEmpty(selection) ? "AND(" + selection + ')' : ""), selectionArgs);
                 break;
+            default:
+                throw new IllegalArgumentException("错误的URI" + uri);
         }
-        return 0;
+        getContext().getContentResolver().notifyChange(uri, null);
+        return count;
     }
 
+    /**
+     * 更新数据
+     *
+     * @param uri
+     * @param values
+     * @param selection
+     * @param selectionArgs
+     * @return
+     */
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-        return 0;
+        //获得数据库实例
+        SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+        int count;
+        switch (sUriMatcher.match(uri)) {
+            //根据指定条件更新
+            case TASKS:
+                count = db.update(TASK_LIST_TABLE_NAME, values, selection, selectionArgs);
+                break;
+            //根据指定条件和ID更新
+            case TASK_ID:
+                String noteId = uri.getPathSegments().get(1);
+                count = db.update(TASK_LIST_TABLE_NAME, values, TaskList.Tasks._ID + "=" +
+                        noteId + (!TextUtils.isEmpty(selection) ? "AND(" + selection + ')' : ""), selectionArgs);
+                break;
+            default:
+                throw new IllegalArgumentException("错误的URI" + uri);
+        }
+        getContext().getContentResolver().notifyChange(uri,null);
+        return count;
+    }
+    static {
+        //Uri 匹配工具类
+        sUriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
+        sUriMatcher.addURI(TaskList.AUTHORITY,"taskLists",TASKS);
+        sUriMatcher.addURI(TaskList.AUTHORITY,"taskLists/#",TASK_ID);
+        //实例化查询列集合
+        sTaskListProjecttionMap = new HashMap<String,String>();
+        //添加查询列
+        sTaskListProjecttionMap.put(TaskList.Tasks._ID, TaskList.Tasks._ID);
+        sTaskListProjecttionMap.put(TaskList.Tasks.CONTENT,TaskList.Tasks.CONTENT);
+        sTaskListProjecttionMap.put(TaskList.Tasks.CREATED,TaskList.Tasks.CREATED);
+        sTaskListProjecttionMap.put(TaskList.Tasks.ALARM,TaskList.Tasks.ALARM);
+        sTaskListProjecttionMap.put(TaskList.Tasks.DATE1, TaskList.Tasks.DATE1);
+        sTaskListProjecttionMap.put(TaskList.Tasks.TIME1, TaskList.Tasks.TIME1);
+        sTaskListProjecttionMap.put(TaskList.Tasks.ON_OFF,TaskList.Tasks.ON_OFF);
     }
 }
