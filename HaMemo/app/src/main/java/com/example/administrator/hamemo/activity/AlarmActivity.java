@@ -23,8 +23,8 @@ public class AlarmActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.alarm);
-        Button btn = findViewById(R.id.cancelButton01);
-        TextView tv = findViewById(R.id.msgTextView01);
+        Button btn = (Button) findViewById(R.id.cancelButton01);
+        TextView tv = (TextView) findViewById(R.id.msgTextView01);
         //获得Notification实例
         String service = Context.NOTIFICATION_SERVICE;
         final NotificationManager nm = (NotificationManager) getSystemService(service);

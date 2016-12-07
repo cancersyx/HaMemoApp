@@ -11,7 +11,7 @@
 
         <provider
             android:name=".db.TaskListProvider"
-            android:authorities="" />
+            android:authorities="com.example.provider.TaskList" />
 
         <activity
             android:name=".activity.TaskListActivity"

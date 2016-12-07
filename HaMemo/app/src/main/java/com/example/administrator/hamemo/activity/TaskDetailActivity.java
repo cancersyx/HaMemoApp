@@ -1,10 +1,10 @@
 package com.example.administrator.hamemo.activity;
 
-import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.ListActivity;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.ContentUris;
@@ -34,7 +34,7 @@ import java.util.Calendar;
 /**
  * Created by zsf on 2016/11/30.
  */
-public class TaskDetailActivity extends Activity {
+public class TaskDetailActivity extends ListActivity {
     //备忘录信息列表
     private ListView listView = null;
     //提醒日期
@@ -222,15 +222,15 @@ public class TaskDetailActivity extends Activity {
                     }
                     return ctv1;
                 case 1:
-                    dateName = v.findViewById(R.id.name);
-                    dateDesc = v.findViewById(R.id.desc);
+                    dateName = (TextView) v.findViewById(R.id.name);
+                    dateDesc = (TextView) v.findViewById(R.id.desc);
                     dateName.setText(strs[position]);
                     dateDesc.setText(mYear + "/" + mMonth + "/" + mDay);
                     return v;
                 //提醒内容
                 case 3:
-                    contentName = v.findViewById(R.id.name);
-                    contentDesc = v.findViewById(R.id.desc);
+                    contentName = (TextView) v.findViewById(R.id.name);
+                    contentDesc = (TextView) v.findViewById(R.id.desc);
                     contentName.setText(strs[position]);
                     contentDesc.setText(content);
                     return v;
@@ -272,7 +272,7 @@ public class TaskDetailActivity extends Activity {
 
     //设置通知提示
     private void setAlarm(boolean flag) {
-        final String BC_ACTION = "com.";
+        final String BC_ACTION = "com.example.administrator.receiver.TaskReceiver";
         //获得AlarmManager实例
         final AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
         //实例化Intent
@@ -298,7 +298,7 @@ public class TaskDetailActivity extends Activity {
     //设置提示日期对话框
     private void showDialog1(String msg) {
         View v = li.inflate(R.layout.item_content, null);
-        final EditText contentET = v.findViewById(R.id.content);
+        final EditText contentET = (EditText) v.findViewById(R.id.content);
         contentET.setText(content);
         new AlertDialog.Builder(this)
                 .setView(v)

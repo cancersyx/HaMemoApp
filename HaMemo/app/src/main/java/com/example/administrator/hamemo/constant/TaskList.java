@@ -9,7 +9,7 @@ import android.provider.BaseColumns;
  */
 public class TaskList {
 
-    public static final String AUTHORITY = "";//授权常量，权限
+    public static final String AUTHORITY = "com.example.provider.TaskList";//授权常量，权限
     private TaskList(){};//构造方法
 
     /**
@@ -20,8 +20,8 @@ public class TaskList {
         private Tasks(){};
         //访问Uri
         public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/taskLists");//内容URI
-        public static final String CONTENT_TYPE = "";
-        public static final String CONTENT_ITEM_TYPE = "";
+        public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.example.taskLists";
+        public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.example.taskLists";
 
         //默认排序常量
         public static final String DEFAULT_SORT_ORDER = "created DESC";
