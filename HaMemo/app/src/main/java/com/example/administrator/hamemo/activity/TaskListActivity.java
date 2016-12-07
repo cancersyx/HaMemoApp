@@ -2,6 +2,7 @@ package com.example.administrator.hamemo.activity;
 
 import android.app.ListActivity;
 import android.content.ContentUris;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -51,7 +52,9 @@ public class TaskListActivity extends ListActivity {
         //获得ListView
         ListView listView = getListView();
         //查询所有备忘录信息
-        final Cursor cursor = managedQuery(getIntent().getData(),
+//        final Cursor cursor = managedQuery(getIntent().getData(),
+//                PROJECTION, null, null, TaskList.Tasks.DEFAULT_SORT_ORDER);
+        final Cursor cursor = getContentResolver().query(getIntent().getData(),
                 PROJECTION, null, null, TaskList.Tasks.DEFAULT_SORT_ORDER);
         //创建Adapter
         SimpleCursorAdapter adapter = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_2

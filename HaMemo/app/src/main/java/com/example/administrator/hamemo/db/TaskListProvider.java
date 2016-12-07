@@ -6,7 +6,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
-import android.database.DatabaseErrorHandler;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -34,7 +33,7 @@ public class TaskListProvider extends ContentProvider {
     //表名称常量
     private static final String TASK_LIST_TABLE_NAME = "taskLists";
     //查询列集合
-    private static HashMap<String, String> sTaskListProjecttionMap;
+    private static HashMap<String, String> sTaskListProjectionMap;
     //查询，更新条件
     private static final int TASKS = 1;
     private static final int TASK_ID = 2;
@@ -57,16 +56,15 @@ public class TaskListProvider extends ContentProvider {
         //创建表
         @Override
         public void onCreate(SQLiteDatabase db) {
-            db.execSQL("CREATE TABLE" + TASK_LIST_TABLE_NAME + "("
-                    + TaskList.Tasks._ID + "INTEGER PRIMARY KEY,"
-                    + TaskList.Tasks.DATE1 + "TEXT,"
-                    + TaskList.Tasks.TIME1 + "TEXT,"
-                    + TaskList.Tasks.CONTENT + "TEXT,"
-                    + TaskList.Tasks.ON_OFF + "INTEGER,"
-                    + TaskList.Tasks.ALARM + "INTEGER,"
-                    + TaskList.Tasks.CREATED + "TEXT"
-                    + ");"
-            );
+            db.execSQL("CREATE TABLE " + TASK_LIST_TABLE_NAME + " ("
+                    + TaskList.Tasks._ID + " INTEGER PRIMARY KEY,"
+                    + TaskList.Tasks.DATE1 + " TEXT,"
+                    + TaskList.Tasks.TIME1 + " TEXT,"
+                    + TaskList.Tasks.CONTENT + " TEXT,"
+                    + TaskList.Tasks.ON_OFF + " INTEGER,"
+                    + TaskList.Tasks.ALARM + " INTEGER,"
+                    + TaskList.Tasks.CREATED + " TEXT"
+                    + ");");
         }
 
         //删除表
@@ -107,12 +105,12 @@ public class TaskListProvider extends ContentProvider {
             //查询所有
             case TASKS:
                 qb.setTables(TASK_LIST_TABLE_NAME);
-                qb.setProjectionMap(sTaskListProjecttionMap);
+                qb.setProjectionMap(sTaskListProjectionMap);
                 break;
             //查询ID
             case TASK_ID:
                 qb.setTables(TASK_LIST_TABLE_NAME);
-                qb.setProjectionMap(sTaskListProjecttionMap);
+                qb.setProjectionMap(sTaskListProjectionMap);
                 qb.appendWhere(TaskList.Tasks._ID + "=" + uri.getPathSegments().get(1));
                 break;
             default:
@@ -253,14 +251,14 @@ public class TaskListProvider extends ContentProvider {
         sUriMatcher.addURI(TaskList.AUTHORITY,"taskLists",TASKS);
         sUriMatcher.addURI(TaskList.AUTHORITY,"taskLists/#",TASK_ID);
         //实例化查询列集合
-        sTaskListProjecttionMap = new HashMap<String,String>();
+        sTaskListProjectionMap = new HashMap<String,String>();
         //添加查询列
-        sTaskListProjecttionMap.put(TaskList.Tasks._ID, TaskList.Tasks._ID);
-        sTaskListProjecttionMap.put(TaskList.Tasks.CONTENT,TaskList.Tasks.CONTENT);
-        sTaskListProjecttionMap.put(TaskList.Tasks.CREATED,TaskList.Tasks.CREATED);
-        sTaskListProjecttionMap.put(TaskList.Tasks.ALARM,TaskList.Tasks.ALARM);
-        sTaskListProjecttionMap.put(TaskList.Tasks.DATE1, TaskList.Tasks.DATE1);
-        sTaskListProjecttionMap.put(TaskList.Tasks.TIME1, TaskList.Tasks.TIME1);
-        sTaskListProjecttionMap.put(TaskList.Tasks.ON_OFF,TaskList.Tasks.ON_OFF);
+        sTaskListProjectionMap.put(TaskList.Tasks._ID, TaskList.Tasks._ID);
+        sTaskListProjectionMap.put(TaskList.Tasks.CONTENT,TaskList.Tasks.CONTENT);
+        sTaskListProjectionMap.put(TaskList.Tasks.CREATED,TaskList.Tasks.CREATED);
+        sTaskListProjectionMap.put(TaskList.Tasks.ALARM,TaskList.Tasks.ALARM);
+        sTaskListProjectionMap.put(TaskList.Tasks.DATE1, TaskList.Tasks.DATE1);
+        sTaskListProjectionMap.put(TaskList.Tasks.TIME1, TaskList.Tasks.TIME1);
+        sTaskListProjectionMap.put(TaskList.Tasks.ON_OFF,TaskList.Tasks.ON_OFF);
     }
 }

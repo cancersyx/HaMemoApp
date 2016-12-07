@@ -13,6 +13,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,35 +66,10 @@ public class TaskDetailActivity extends ListActivity {
     //访问布局实例
     private LayoutInflater li;
 
-    //初始化方法
-    private void init(Intent intent) {
-        Bundle b = intent.getBundleExtra("b");
-        if (b != null) {
-            id1 = b.getInt("id");
-            content = b.getString("content");
-            date1 = b.getString("date1");
-            time1 = b.getString("time1");
-            on_off = b.getInt("on_off");
-            alarm = b.getInt("alarm");
-        }
-        if (date1 != null && date1.length() > 0) {
-            String[] strs = date1.split("/");
-            mYear = Integer.parseInt(strs[0]);
-            mMonth = Integer.parseInt(strs[1]);
-            mDay = Integer.parseInt(strs[2]);
-        }
-        if (time1 != null && time1.length() > 0) {
-            String[] strs = time1.split(":");
-            mHour = Integer.parseInt(strs[0]);
-            mMinute = Integer.parseInt(strs[1]);
-        }
-    }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //获得ListView
         listView = getListView();
         //实例化LayoutInflater
         li = getLayoutInflater();
@@ -154,6 +130,29 @@ public class TaskDetailActivity extends ListActivity {
 
     }
 
+    //初始化方法
+    private void init(Intent intent) {
+        Bundle b = intent.getBundleExtra("b");
+        if (b != null) {
+            id1 = b.getInt("id");
+            content = b.getString("content");
+            date1 = b.getString("date1");
+            time1 = b.getString("time1");
+            on_off = b.getInt("on_off");
+            alarm = b.getInt("alarm");
+        }
+        if (date1 != null && date1.length() > 0) {
+            String[] strs = date1.split("/");
+            mYear = Integer.parseInt(strs[0]);
+            mMonth = Integer.parseInt(strs[1]);
+            mDay = Integer.parseInt(strs[2]);
+        }
+        if (time1 != null && time1.length() > 0) {
+            String[] strs = time1.split(":");
+            mHour = Integer.parseInt(strs[0]);
+            mMinute = Integer.parseInt(strs[1]);
+        }
+    }
 
     @Override
     protected void onResume() {
@@ -221,11 +220,20 @@ public class TaskDetailActivity extends ListActivity {
                         ctv1.setChecked(true);
                     }
                     return ctv1;
+                //日期
                 case 1:
                     dateName = (TextView) v.findViewById(R.id.name);
                     dateDesc = (TextView) v.findViewById(R.id.desc);
                     dateName.setText(strs[position]);
+                    Log.d("zsf","日期是：" + mYear);
                     dateDesc.setText(mYear + "/" + mMonth + "/" + mDay);
+                    return v;
+                //提醒时间
+                case 2:
+                    timeName = (TextView) findViewById(R.id.name);
+                    timeDesc = (TextView) findViewById(R.id.desc);
+                    timeName.setText(strs[position]);
+                    timeDesc.setText(mHour + ":" + mMinute);
                     return v;
                 //提醒内容
                 case 3:
@@ -238,7 +246,7 @@ public class TaskDetailActivity extends ListActivity {
                 //是否声音提示
                 case 4:
                     ctv2 = (CheckedTextView) li.inflate(android.R.layout.simple_list_item_multiple_choice, null);
-                    ctv2.setText(position);
+                    ctv2.setText(strs[position]);
                     if (alarm == 0) {
                         ctv2.setChecked(false);
                     } else {
@@ -249,7 +257,7 @@ public class TaskDetailActivity extends ListActivity {
                     break;
 
             }
-            return null;
+            return v;
         }
     }
 
@@ -351,13 +359,13 @@ public class TaskDetailActivity extends ListActivity {
         values.put(TaskList.Tasks.ON_OFF, ctv1.isChecked() ? 1 : 0);
         values.put(TaskList.Tasks.ALARM, ctv2.isChecked() ? 1 : 0);
         //修改
-        if(id1 != 0){
-            Uri uri = ContentUris.withAppendedId(TaskList.Tasks.CONTENT_URI,id1);
-            getContentResolver().update(uri,values,null,null);
-        }else {
+        if (id1 != 0) {
+            Uri uri = ContentUris.withAppendedId(TaskList.Tasks.CONTENT_URI, id1);
+            getContentResolver().update(uri, values, null, null);
+        } else {
             //保存
             Uri uri = TaskList.Tasks.CONTENT_URI;
-            getContentResolver().insert(uri,values);
+            getContentResolver().insert(uri, values);
         }
     }
 }
