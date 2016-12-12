@@ -1,6 +1,5 @@
 package com.example.administrator.hamemo.activity;
 
-import android.app.Activity;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Context;
@@ -16,7 +15,7 @@ import com.example.administrator.hamemo.R;
  * Created by zsf on 2016/12/1.
  * 提醒用户
  */
-public class AlarmActivity extends Activity {
+public class AlarmActivity extends BaseActivity {
     public static final int ID = 1;
 
     @Override

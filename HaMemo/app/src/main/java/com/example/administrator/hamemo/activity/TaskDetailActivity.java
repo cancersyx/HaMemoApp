@@ -22,7 +22,6 @@ import android.widget.BaseAdapter;
 import android.widget.CheckedTextView;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.HeaderViewListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -36,23 +35,17 @@ import java.util.Calendar;
  * Created by zsf on 2016/11/30.
  */
 public class TaskDetailActivity extends ListActivity {
-    //备忘录信息列表
-    private ListView listView = null;
-    //提醒日期
+
+    private ListView listView = null; //备忘录信息列表
     private int mYear;
     private int mMonth;
     private int mDay;
-    //提醒时间
     private int mHour;
     private int mMinute;
-    //日期显示TextView
     private TextView dateName, dateDesc;
-    //时间显示TextView
     private TextView timeName, timeDesc;
-    //提醒内容TextView
     private TextView contentName, contentDesc;
-    //是否开启提醒
-    private int on_off = 0;
+    private int on_off = 0; //是否开启提醒
     private int alarm = 0;
     //显示日期，时间对话框常量
     static final int DATE_DIALOG_ID = 0;
