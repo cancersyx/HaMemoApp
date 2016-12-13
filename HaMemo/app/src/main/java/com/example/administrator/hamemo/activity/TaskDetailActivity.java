@@ -70,7 +70,7 @@ public class TaskDetailActivity extends ListActivity {
         final Calendar c = Calendar.getInstance(); //获得Calendar实例
         //获得当前日期，时间
         mYear = c.get(Calendar.YEAR);
-        mMonth = c.get(Calendar.MONTH);
+        mMonth = c.get(Calendar.MONTH) + 1;
         mDay = c.get(Calendar.DAY_OF_MONTH);
         mHour = c.get(Calendar.HOUR_OF_DAY);
         mMinute = c.get(Calendar.MINUTE);
@@ -119,7 +119,6 @@ public class TaskDetailActivity extends ListActivity {
 
     }
 
-    //初始化方法
     private void init(Intent intent) {
         Bundle b = intent.getBundleExtra("b");
         if (b != null) {
@@ -150,7 +149,6 @@ public class TaskDetailActivity extends ListActivity {
         init(getIntent());
     }
 
-    //ListView Adapter ,该类实现了列表的每一项通过自定义视图实现
     private class ViewAdapter extends BaseAdapter {
 
         String[] strs = {"是否开启", "日期", "时间", "内容", "开启闹钟"}; //列表显示内容

@@ -23,7 +23,7 @@ import com.example.administrator.hamemo.constant.TaskList;
  * 2.响应ListView单击事件，用户单击某条备忘录信息时，显示该条备忘录的详细信息
  * 3.提供选项菜单添加和删除备忘录信息。
  */
-public class TaskListActivity extends BaseActivity implements Toolbar.OnMenuItemClickListener, AdapterView.OnItemClickListener {
+public class TaskListActivity extends BaseActivity {
 
     private final String LOG_TAG = TaskListActivity.class.getSimpleName();
     private Toolbar mToolBar;
@@ -47,7 +47,6 @@ public class TaskListActivity extends BaseActivity implements Toolbar.OnMenuItem
         initView();
         initData();
         initEvent();
-
 
         //查询所有备忘录信息
         final Cursor cursor = getContentResolver().query(getIntent().getData(),
@@ -79,60 +78,57 @@ public class TaskListActivity extends BaseActivity implements Toolbar.OnMenuItem
     }
 
     private void initEvent() {
-        mToolBar.setOnMenuItemClickListener(this);
-        mListView.setOnItemClickListener(this);
-    }
+        mToolBar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.new_create:
+                        Intent intent = new Intent();
+                        intent.setClass(TaskListActivity.this, TaskDetailActivity.class);
+                        startActivity(intent);
+                        break;
+                    case R.id.delte:
+                        Toast.makeText(TaskListActivity.this, "选择了删除选项", Toast.LENGTH_SHORT).show();
+                        return true;
 
+                    case R.id.change_style:
 
-    @Override
-    public boolean onMenuItemClick(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.new_create:
-                Intent intent = new Intent();
-                intent.setClass(this, TaskDetailActivity.class);
-                startActivity(intent);
-                break;
-            case R.id.delte:
-                Toast.makeText(this, "选择了删除选项", Toast.LENGTH_SHORT).show();
-                break;
-            case R.id.change_style:
+                        break;
+                }
+                return false;
+            }
+        });
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Uri uri = ContentUris.withAppendedId(TaskList.Tasks.CONTENT_URI, id);
+                Cursor cursor1 = managedQuery(uri, PROJECTION, null, null, TaskList.Tasks.DEFAULT_SORT_ORDER);
+                if (cursor1.moveToNext()) {
+                    int id1 = cursor1.getInt(0);
+                    String content = cursor1.getString(1);
+                    String created = cursor1.getString(2);
+                    int alarm = cursor1.getInt(3);
+                    String date1 = cursor1.getString(4);
+                    String time1 = cursor1.getString(5);
+                    int on_off = cursor1.getInt(6);
+                    Bundle b = new Bundle();
+                    b.putInt("id", id1);
+                    b.putString("content", content);
+                    b.putString("created", created);
+                    b.putInt("alarm", alarm);
+                    b.putString("date1", date1);
+                    b.putString("time1", time1);
+                    b.putInt("on_off", on_off);
 
-                break;
-        }
+                    //将备忘录信息添加到Intent
+                    mIntent.putExtra("b", b);
+                    //启动备忘录详细信息Activity
+                    mIntent.setClass(TaskListActivity.this, TaskDetailActivity.class);
+                    startActivity(mIntent);
 
-
-        return false;
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        //通过ID查询备忘录信息
-        Uri uri = ContentUris.withAppendedId(TaskList.Tasks.CONTENT_URI, id);
-        Cursor cursor1 = managedQuery(uri, PROJECTION, null, null, TaskList.Tasks.DEFAULT_SORT_ORDER);
-        if (cursor1.moveToNext()) {
-            int id1 = cursor1.getInt(0);
-            String content = cursor1.getString(1);
-            String created = cursor1.getString(2);
-            int alarm = cursor1.getInt(3);
-            String date1 = cursor1.getString(4);
-            String time1 = cursor1.getString(5);
-            int on_off = cursor1.getInt(6);
-            Bundle b = new Bundle();
-            b.putInt("id", id1);
-            b.putString("content", content);
-            b.putString("created", created);
-            b.putInt("alarm", alarm);
-            b.putString("date1", date1);
-            b.putString("time1", time1);
-            b.putInt("on_off", on_off);
-
-            //将备忘录信息添加到Intent
-            mIntent.putExtra("b", b);
-            //启动备忘录详细信息Activity
-            mIntent.setClass(TaskListActivity.this, TaskDetailActivity.class);
-            startActivity(mIntent);
-
-        }
+                }
+            }
+        });
     }
 
 }
