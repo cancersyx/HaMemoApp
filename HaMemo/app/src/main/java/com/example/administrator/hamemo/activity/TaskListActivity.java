@@ -95,6 +95,9 @@ public class TaskListActivity extends BaseActivity implements Toolbar.OnMenuItem
             case R.id.delte:
                 Toast.makeText(this, "选择了删除选项", Toast.LENGTH_SHORT).show();
                 break;
+            case R.id.change_style:
+
+                break;
         }
 
 

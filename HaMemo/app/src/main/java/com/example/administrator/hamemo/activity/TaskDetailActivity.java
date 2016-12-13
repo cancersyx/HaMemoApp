@@ -13,7 +13,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,7 +35,7 @@ import java.util.Calendar;
  */
 public class TaskDetailActivity extends ListActivity {
 
-    private ListView listView = null; //备忘录信息列表
+    private ListView mListView = null; //备忘录信息列表
     private int mYear;
     private int mMonth;
     private int mDay;
@@ -63,15 +62,12 @@ public class TaskDetailActivity extends ListActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        listView = getListView();
-        //实例化LayoutInflater
-        li = getLayoutInflater();
-        //设置ListView Adapter
-        listView.setAdapter(new ViewAdapter());
-        //可多选
-        listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-        //获得Calendar实例
-        final Calendar c = Calendar.getInstance();
+//        setContentView(R.layout.activity_task_detail);
+        mListView = getListView();
+        li = getLayoutInflater(); //实例化LayoutInflater
+        mListView.setAdapter(new ViewAdapter());
+        mListView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);  //可多选
+        final Calendar c = Calendar.getInstance(); //获得Calendar实例
         //获得当前日期，时间
         mYear = c.get(Calendar.YEAR);
         mMonth = c.get(Calendar.MONTH);
@@ -79,7 +75,7 @@ public class TaskDetailActivity extends ListActivity {
         mHour = c.get(Calendar.HOUR_OF_DAY);
         mMinute = c.get(Calendar.MINUTE);
         //响应列表单击事件
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
@@ -87,7 +83,7 @@ public class TaskDetailActivity extends ListActivity {
                     case 0:
                         ctv1 = (CheckedTextView) view;
                         if (ctv1.isChecked()) {
-                            on_off = 0;
+                            on_off = 0;//开启提醒
                         } else {
                             on_off = 1;
                         }
@@ -102,7 +98,7 @@ public class TaskDetailActivity extends ListActivity {
                         break;
                     //设置提醒内容
                     case 3:
-                        showDialog1("请输入内容：");
+                        showDialogInputDetailContent("请输入内容：");
                         break;
                     //设置是否开启语音提醒
                     case 4:
@@ -156,49 +152,24 @@ public class TaskDetailActivity extends ListActivity {
 
     //ListView Adapter ,该类实现了列表的每一项通过自定义视图实现
     private class ViewAdapter extends BaseAdapter {
-        //列表显示内容
-        String[] strs = {"是否开启", "日期", "时间", "内容", "开启闹钟"};
 
-        /**
-         * 获得列表项
-         *
-         * @return
-         */
+        String[] strs = {"是否开启", "日期", "时间", "内容", "开启闹钟"}; //列表显示内容
+
         @Override
         public int getCount() {
             return strs.length;
         }
 
-        /**
-         * 返回列表项
-         *
-         * @param position
-         * @return
-         */
         @Override
         public Object getItem(int position) {
             return position;
         }
 
-        /**
-         * 返回列表ID
-         *
-         * @param position
-         * @return
-         */
         @Override
         public long getItemId(int position) {
             return position;
         }
 
-        /**
-         * 获得当前列表项视图
-         *
-         * @param position
-         * @param convertView
-         * @param parent
-         * @return
-         */
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             View v = li.inflate(R.layout.item_row, null);
@@ -218,13 +189,12 @@ public class TaskDetailActivity extends ListActivity {
                     dateName = (TextView) v.findViewById(R.id.name);
                     dateDesc = (TextView) v.findViewById(R.id.desc);
                     dateName.setText(strs[position]);
-                    Log.d("zsf","日期是：" + mYear);
                     dateDesc.setText(mYear + "/" + mMonth + "/" + mDay);
                     return v;
                 //提醒时间
                 case 2:
-                    timeName = (TextView) findViewById(R.id.name);
-                    timeDesc = (TextView) findViewById(R.id.desc);
+                    timeName = (TextView) v.findViewById(R.id.name);
+                    timeDesc = (TextView) v.findViewById(R.id.desc);
                     timeName.setText(strs[position]);
                     timeDesc.setText(mHour + ":" + mMinute);
                     return v;
@@ -297,7 +267,7 @@ public class TaskDetailActivity extends ListActivity {
     }
 
     //设置提示日期对话框
-    private void showDialog1(String msg) {
+    private void showDialogInputDetailContent(String msg) {
         View v = li.inflate(R.layout.item_content, null);
         final EditText contentET = (EditText) v.findViewById(R.id.content);
         contentET.setText(content);
@@ -314,15 +284,6 @@ public class TaskDetailActivity extends ListActivity {
                 }).show();
     }
 
-    //时间选择对话框
-    private TimePickerDialog.OnTimeSetListener mTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
-        @Override
-        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-            mHour = hourOfDay;
-            mMinute = minute;
-            timeDesc.setText(mHour + ":" + mMinute);
-        }
-    };
     //日期选择对话框
     private DatePickerDialog.OnDateSetListener mDateSetListener = new DatePickerDialog.OnDateSetListener() {
         @Override
@@ -333,6 +294,17 @@ public class TaskDetailActivity extends ListActivity {
             dateDesc.setText(mYear + "/" + mMonth + "/" + mDay);
         }
     };
+
+    //时间选择对话框
+    private TimePickerDialog.OnTimeSetListener mTimeSetListener = new TimePickerDialog.OnTimeSetListener() {
+        @Override
+        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+            mHour = hourOfDay;
+            mMinute = minute;
+            timeDesc.setText(mHour + ":" + mMinute);
+        }
+    };
+
 
     //保存或修改备忘录信息
 
