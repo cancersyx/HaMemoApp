@@ -1,16 +1,18 @@
 package com.example.administrator.hamemo.activity;
 
+import android.app.AlertDialog;
 import android.content.ContentUris;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
 import com.example.administrator.hamemo.R;
@@ -23,12 +25,14 @@ import com.example.administrator.hamemo.constant.TaskList;
  * 2.响应ListView单击事件，用户单击某条备忘录信息时，显示该条备忘录的详细信息
  * 3.提供选项菜单添加和删除备忘录信息。
  */
-public class TaskListActivity extends BaseActivity {
+public class MainActivity extends BaseActivity {
 
-    private final String LOG_TAG = TaskListActivity.class.getSimpleName();
     private Toolbar mToolBar;
     private ListView mListView;
     private Intent mIntent;
+    private SimpleCursorAdapter adapter;
+
+
     //查询列数组
     private static final String[] PROJECTION = new String[]{
             TaskList.Tasks._ID,//0
@@ -43,18 +47,19 @@ public class TaskListActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_task_list);
+        setContentView(R.layout.activity_main);
         initView();
         initData();
         initEvent();
 
-        //查询所有备忘录信息
+//        查询所有备忘录信息
         final Cursor cursor = getContentResolver().query(getIntent().getData(),
                 PROJECTION, null, null, TaskList.Tasks.DEFAULT_SORT_ORDER);
-        //创建Adapter
-        SimpleCursorAdapter adapter = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_2
+//        创建Adapter
+        adapter = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_2
                 , cursor, new String[]{TaskList.Tasks._ID, TaskList.Tasks.CONTENT},
                 new int[]{android.R.id.text1, android.R.id.text2});
+
         mListView.setAdapter(adapter);
 
     }
@@ -66,11 +71,9 @@ public class TaskListActivity extends BaseActivity {
         mListView = (ListView) findViewById(R.id.listView);
         mToolBar.setTitle("备忘录");
         mToolBar.inflateMenu(R.menu.main);
-
     }
 
     private void initData() {
-
         if (mIntent.getData() == null) {
             mIntent.setData(TaskList.Tasks.CONTENT_URI); //设置Uri
         }
@@ -84,11 +87,11 @@ public class TaskListActivity extends BaseActivity {
                 switch (item.getItemId()) {
                     case R.id.new_create:
                         Intent intent = new Intent();
-                        intent.setClass(TaskListActivity.this, TaskDetailActivity.class);
+                        intent.setClass(MainActivity.this, TaskDetailActivity.class);
                         startActivity(intent);
                         break;
                     case R.id.delte:
-                        Toast.makeText(TaskListActivity.this, "选择了删除选项", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "选择了删除选项", Toast.LENGTH_SHORT).show();
                         return true;
 
                     case R.id.change_style:
@@ -123,12 +126,44 @@ public class TaskListActivity extends BaseActivity {
                     //将备忘录信息添加到Intent
                     mIntent.putExtra("b", b);
                     //启动备忘录详细信息Activity
-                    mIntent.setClass(TaskListActivity.this, TaskDetailActivity.class);
+                    mIntent.setClass(MainActivity.this, TaskDetailActivity.class);
                     startActivity(mIntent);
 
                 }
+
             }
         });
+
+        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, final View view, final int position,
+                                           final long id) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setIcon(R.drawable.warn);
+                builder.setMessage("确认要删除该便签？");
+                builder.setPositiveButton("删除", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //从数据库中删除掉该项item
+                        getContentResolver().delete(getIntent().getData(),
+                                "_id = ?", new String[]{Integer.toString((int) id)});
+                        adapter.notifyDataSetChanged();
+
+                    }
+                });
+                builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                builder.setCancelable(false);
+                builder.create().show();
+                return true;
+            }
+        });
+
     }
+
 
 }

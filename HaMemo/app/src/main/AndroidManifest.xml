@@ -14,7 +14,7 @@
             android:authorities="com.example.provider.TaskList" />
 
         <activity
-            android:name=".activity.TaskListActivity"
+            android:name=".activity.MainActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
