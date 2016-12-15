@@ -23,7 +23,7 @@ public class TaskList {
         public static final String CONTENT_TYPE = "vnd.android.cursor.dir/vnd.example.taskLists";
         public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/vnd.example.taskLists";
 
-        //默认排序常量
+        //默认排序常量（Desc是降序）
         public static final String DEFAULT_SORT_ORDER = "created DESC";
         //内容
         public static final String CONTENT = "content";
