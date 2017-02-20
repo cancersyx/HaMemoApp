@@ -17,13 +17,14 @@ import com.example.administrator.hamemo.R;
  */
 public class AlarmActivity extends BaseActivity {
     public static final int ID = 1;
+    private Button btn;
+    private TextView tv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.alarm);
-        Button btn = (Button) findViewById(R.id.cancelButton01);
-        TextView tv = (TextView) findViewById(R.id.msgTextView01);
+        initView();
         //获得Notification实例
         String service = Context.NOTIFICATION_SERVICE;
         final NotificationManager nm = (NotificationManager) getSystemService(service);
@@ -37,7 +38,7 @@ public class AlarmActivity extends BaseActivity {
         //设置声音提示
         n.sound = Uri.parse("file://sdcard/fallbacking.ogg");
         //发出通知
-        nm.notify(ID,n);
+        nm.notify(ID, n);
         //取消通知
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -46,6 +47,13 @@ public class AlarmActivity extends BaseActivity {
                 finish();
             }
         });
+
+    }
+
+    private void initView() {
+
+        btn = (Button) findViewById(R.id.cancelButton01);
+        tv = (TextView) findViewById(R.id.msgTextView01);
 
     }
 }

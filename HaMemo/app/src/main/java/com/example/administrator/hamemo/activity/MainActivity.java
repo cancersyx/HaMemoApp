@@ -9,11 +9,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.example.administrator.hamemo.R;
 import com.example.administrator.hamemo.constant.TaskList;
@@ -30,7 +30,7 @@ public class MainActivity extends BaseActivity {
     private Toolbar mToolBar;
     private ListView mListView;
     private Intent mIntent;
-    private SimpleCursorAdapter adapter;
+    private SimpleCursorAdapter mAdapter;
 
 
     //查询列数组
@@ -52,15 +52,15 @@ public class MainActivity extends BaseActivity {
         initData();
         initEvent();
 
-//        查询所有备忘录信息
+        //查询所有备忘录信息
         final Cursor cursor = getContentResolver().query(getIntent().getData(),
                 PROJECTION, null, null, TaskList.Tasks.DEFAULT_SORT_ORDER);
-//        创建Adapter
-        adapter = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_2
+        //创建Adapter
+        mAdapter = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_2
                 , cursor, new String[]{TaskList.Tasks._ID, TaskList.Tasks.CONTENT},
                 new int[]{android.R.id.text1, android.R.id.text2});
 
-        mListView.setAdapter(adapter);
+        mListView.setAdapter(mAdapter);
 
     }
 
@@ -89,13 +89,6 @@ public class MainActivity extends BaseActivity {
                         Intent intent = new Intent();
                         intent.setClass(MainActivity.this, TaskDetailActivity.class);
                         startActivity(intent);
-                        break;
-                    case R.id.delte:
-                        Toast.makeText(MainActivity.this, "选择了删除选项", Toast.LENGTH_SHORT).show();
-                        return true;
-
-                    case R.id.change_style:
-
                         break;
                 }
                 return false;
@@ -128,6 +121,7 @@ public class MainActivity extends BaseActivity {
                     //启动备忘录详细信息Activity
                     mIntent.setClass(MainActivity.this, TaskDetailActivity.class);
                     startActivity(mIntent);
+                    Log.d("ZSF","是否进入到了这里");
 
                 }
 
@@ -147,7 +141,7 @@ public class MainActivity extends BaseActivity {
                         //从数据库中删除掉该项item
                         getContentResolver().delete(getIntent().getData(),
                                 "_id = ?", new String[]{Integer.toString((int) id)});
-                        adapter.notifyDataSetChanged();
+                        mAdapter.notifyDataSetChanged();
 
                     }
                 });
@@ -165,5 +159,9 @@ public class MainActivity extends BaseActivity {
 
     }
 
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        initEvent();
+    }
 }

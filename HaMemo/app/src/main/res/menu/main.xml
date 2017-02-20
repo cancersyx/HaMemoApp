@@ -5,12 +5,12 @@
          android:id="@+id/new_create"
          android:title="新建"
          android:icon="@drawable/new_folder"/>
-    <item
-        android:id="@+id/delte"
-        android:title="删除"
-        android:icon="@drawable/delete"/>
-    <item
-        android:id="@+id/change_style"
-        android:title="修改样式"/>
+    <!--<item-->
+        <!--android:id="@+id/delte"-->
+        <!--android:title="删除"-->
+        <!--android:icon="@drawable/delete"/>-->
+    <!--<item-->
+        <!--android:id="@+id/change_style"-->
+        <!--android:title="修改样式"/>-->
 
 </menu>
