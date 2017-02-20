@@ -5,4 +5,4 @@
 * SQLite数据库
 * BroadcastReceiver
 * 沉浸式状态栏 
-
+![](https://github.com/cancersyx/HaMemoApp/blob/master/ScreenShot/pic1.png)
