@@ -10,8 +10,8 @@
         android:theme="@style/AppTheme">
 
         <provider
-            android:name=".db.TaskListProvider"
-            android:authorities="com.example.provider.TaskList" />
+            android:name=".provider.TaskListProvider"
+            android:authorities="com.example.administrator.hamemo.constant.provider" />
 
         <activity
             android:name=".activity.MainActivity"
@@ -21,7 +21,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.TaskDetailActivity">
+        <activity android:name=".activity.MemoDetailsActivity">
             <intent-filter>
                 <action android:name="android.intent.action.NEW" />
                 <category android:name="android.intent.category.DEFAULT" />

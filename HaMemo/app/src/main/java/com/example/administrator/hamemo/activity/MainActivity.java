@@ -9,14 +9,13 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.example.administrator.hamemo.R;
-import com.example.administrator.hamemo.constant.TaskList;
+import com.example.administrator.hamemo.constant.Constant;
 
 /**
  * Created by zsf on 2016/11/30.
@@ -35,13 +34,13 @@ public class MainActivity extends BaseActivity {
 
     //查询列数组
     private static final String[] PROJECTION = new String[]{
-            TaskList.Tasks._ID,//0
-            TaskList.Tasks.CONTENT,//1
-            TaskList.Tasks.CREATED,//2
-            TaskList.Tasks.ALARM,//3
-            TaskList.Tasks.DATE1,//4
-            TaskList.Tasks.TIME1,//5
-            TaskList.Tasks.ON_OFF //6
+            Constant.Tasks._ID,//0
+            Constant.Tasks.CONTENT,//1
+            Constant.Tasks.CREATED,//2
+            Constant.Tasks.ALARM,//3
+            Constant.Tasks.DATE1,//4
+            Constant.Tasks.TIME1,//5
+            Constant.Tasks.ON_OFF //6
     };
 
     @Override
@@ -54,10 +53,10 @@ public class MainActivity extends BaseActivity {
 
         //查询所有备忘录信息
         final Cursor cursor = getContentResolver().query(getIntent().getData(),
-                PROJECTION, null, null, TaskList.Tasks.DEFAULT_SORT_ORDER);
+                PROJECTION, null, null, Constant.Tasks.DEFAULT_SORT_ORDER);
         //创建Adapter
         mAdapter = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_2
-                , cursor, new String[]{TaskList.Tasks._ID, TaskList.Tasks.CONTENT},
+                , cursor, new String[]{Constant.Tasks._ID, Constant.Tasks.CONTENT},
                 new int[]{android.R.id.text1, android.R.id.text2});
 
         mListView.setAdapter(mAdapter);
@@ -75,7 +74,7 @@ public class MainActivity extends BaseActivity {
 
     private void initData() {
         if (mIntent.getData() == null) {
-            mIntent.setData(TaskList.Tasks.CONTENT_URI); //设置Uri
+            mIntent.setData(Constant.Tasks.CONTENT_URI); //设置Uri
         }
 
     }
@@ -86,9 +85,7 @@ public class MainActivity extends BaseActivity {
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.new_create:
-                        Intent intent = new Intent();
-                        intent.setClass(MainActivity.this, TaskDetailActivity.class);
-                        startActivity(intent);
+                        startActivity(new Intent(MainActivity.this, MemoDetailsActivity.class));
                         break;
                 }
                 return false;
@@ -97,8 +94,8 @@ public class MainActivity extends BaseActivity {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Uri uri = ContentUris.withAppendedId(TaskList.Tasks.CONTENT_URI, id);
-                Cursor cursor1 = managedQuery(uri, PROJECTION, null, null, TaskList.Tasks.DEFAULT_SORT_ORDER);
+                Uri uri = ContentUris.withAppendedId(Constant.Tasks.CONTENT_URI, id);
+                Cursor cursor1 = managedQuery(uri, PROJECTION, null, null, Constant.Tasks.DEFAULT_SORT_ORDER);
                 if (cursor1.moveToNext()) {
                     int id1 = cursor1.getInt(0);
                     String content = cursor1.getString(1);
@@ -119,9 +116,8 @@ public class MainActivity extends BaseActivity {
                     //将备忘录信息添加到Intent
                     mIntent.putExtra("b", b);
                     //启动备忘录详细信息Activity
-                    mIntent.setClass(MainActivity.this, TaskDetailActivity.class);
+                    mIntent.setClass(MainActivity.this, MemoDetailsActivity.class);
                     startActivity(mIntent);
-                    Log.d("ZSF","是否进入到了这里");
 
                 }
 

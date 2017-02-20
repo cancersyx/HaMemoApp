@@ -26,14 +26,14 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.example.administrator.hamemo.R;
-import com.example.administrator.hamemo.constant.TaskList;
+import com.example.administrator.hamemo.constant.Constant;
 
 import java.util.Calendar;
 
 /**
  * Created by zsf on 2016/11/30.
  */
-public class TaskDetailActivity extends ListActivity {
+public class MemoDetailsActivity extends ListActivity {
 
     private ListView mListView = null; //备忘录信息列表
     private int mYear;
@@ -121,6 +121,7 @@ public class TaskDetailActivity extends ListActivity {
 
     private void init(Intent intent) {
         Bundle b = intent.getBundleExtra("b");
+
         if (b != null) {
             id1 = b.getInt("id");
             content = b.getString("content");
@@ -241,7 +242,7 @@ public class TaskDetailActivity extends ListActivity {
 
     //设置通知提示
     private void setAlarm(boolean flag) {
-        final String BC_ACTION = "com.example.administrator.receiver.TaskReceiver";
+        final String BC_ACTION = "com.example.administrator.hamemo.receiver.TaskReceiver";
         //获得AlarmManager实例
         final AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
         //实例化Intent
@@ -316,19 +317,22 @@ public class TaskDetailActivity extends ListActivity {
     private void saveOrUpdate() {
         ContentValues values = new ContentValues();
         values.clear();
-        values.put(TaskList.Tasks.CONTENT, contentDesc.getText().toString());
-        values.put(TaskList.Tasks.DATE1, dateDesc.getText().toString());
-        values.put(TaskList.Tasks.TIME1, timeDesc.getText().toString());
-        values.put(TaskList.Tasks.ON_OFF, ctv1.isChecked() ? 1 : 0);
-        values.put(TaskList.Tasks.ALARM, ctv2.isChecked() ? 1 : 0);
-        //修改
-        if (id1 != 0) {
-            Uri uri = ContentUris.withAppendedId(TaskList.Tasks.CONTENT_URI, id1);
-            getContentResolver().update(uri, values, null, null);
-        } else {
-            //保存
-            Uri uri = TaskList.Tasks.CONTENT_URI;
-            getContentResolver().insert(uri, values);
+        if (!contentDesc.getText().toString().isEmpty()){
+            values.put(Constant.Tasks.CONTENT, contentDesc.getText().toString());
+            values.put(Constant.Tasks.DATE1, dateDesc.getText().toString());
+            values.put(Constant.Tasks.TIME1, timeDesc.getText().toString());
+            values.put(Constant.Tasks.ON_OFF, ctv1.isChecked() ? 1 : 0);
+            values.put(Constant.Tasks.ALARM, ctv2.isChecked() ? 1 : 0);
+            //修改
+            if (id1 != 0) {
+                Uri uri = ContentUris.withAppendedId(Constant.Tasks.CONTENT_URI, id1);
+                getContentResolver().update(uri, values, null, null);
+            } else {
+                //保存
+                Uri uri = Constant.Tasks.CONTENT_URI;
+                getContentResolver().insert(uri, values);
+            }
         }
+
     }
 }
