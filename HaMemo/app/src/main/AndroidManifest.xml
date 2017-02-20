@@ -37,7 +37,7 @@
 
         <receiver android:name=".receiver.TaskReceiver">
             <intent-filter>
-                <action android:name="com.example.administrator.TaskReceiver" />
+                <action android:name="com.example.administrator.hamemo.receiver.TaskReceiver" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
